@@ -7,4 +7,4 @@ export const DEFAULT_SCROLL_Y_POS = 1000; // px
 export const DEFAULT_FILENAME = 'screenshot';
 
 export const ENABLE_AUTO_SCROLL = true;
-export const URL_MATCH_PATTERN = 'http(s?)://www.twitch.tv/.*';
+export const URL_MATCH_PATTERN = '^http(s?)://.*.twitch.tv/.*';
