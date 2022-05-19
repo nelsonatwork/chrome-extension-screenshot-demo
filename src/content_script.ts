@@ -10,5 +10,5 @@ chrome.runtime.onMessage.addListener((message, sender, senderResponse) => {
 });
 
 document.addEventListener('DOMContentLoaded', function (event) {
-  log.debug('hola');
+  log.debug('[DOMContentLoaded]: event fired', event);
 });

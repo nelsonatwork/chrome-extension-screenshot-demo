@@ -3,8 +3,9 @@ chrome.runtime.sendMessage(
     message: 'get_name'
   },
   (response) => {
-    if (response.message === 'success') {
-      document.querySelector('div')!.innerHTML = `Hello ${response.payload}`;
+    const querySelector = document.querySelector('div');
+    if (response.message === 'success' && querySelector) {
+      querySelector.innerHTML = `Hello ${response.payload}`;
     }
   }
 );

@@ -57,7 +57,7 @@ export const createTab = async (url: string, locale: string): Promise<Tab> => {
       tab = t;
     })
     .catch((e) => {
-      log.error(`[createTab {callback}]: something went wrong!`);
+      log.error(`[createTab {callback}]: something went wrong!`, e);
     });
   return tab;
 };
@@ -75,7 +75,7 @@ export const removeTab = async (tabId: number) => {
       log.debug(`[removeTab {callback}]: tab removed successfully`);
     })
     .catch((e) => {
-      log.error(`[removeTab {callback}]: something went wrong!`);
+      log.error(`[removeTab {callback}]: something went wrong!`, e);
     });
 };
 
@@ -90,10 +90,12 @@ export const executeScrollByScript = async (tabId: number, totalHeight: number) 
   for (let i = 0; i < x; i++) {
     await delay();
     await chrome.scripting
+
       .executeScript({
         target: { tabId: tabId },
         func: scrollBy,
         args: [DEFAULT_SCROLL_Y_POS]
+        /* eslint-disable @typescript-eslint/no-explicit-any */
       } as any)
       .then((results) => {
         log.debug('[executeScrollByScript {callback}]: executeScript success', results);

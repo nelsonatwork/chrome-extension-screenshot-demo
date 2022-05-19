@@ -7,7 +7,8 @@
     "build": "webpack --config webpack/webpack.config.js",
     "watch": "webpack --config webpack/webpack.config.js --watch",
     "format": "prettier --config .prettierrc 'src/**/*.ts' --write",
-    "lint": "eslint . --ext .ts --fix"
+    "lint": "eslint . --ext .ts --fix",
+    "prepare": "husky install"
   },
   "keywords": [],
   "author": "Nelson Wei",
@@ -24,10 +25,21 @@
     "eslint": "^8.15.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
+    "husky": "^7.0.0",
+    "lint-staged": "^12.4.1",
     "prettier": "^2.6.2",
     "ts-loader": "^9.3.0",
     "typescript": "^4.6.4",
     "webpack": "^5.72.1",
     "webpack-cli": "^4.9.2"
+  },
+  "lint-staged": {
+    "**/*.{js,ts}": [
+      "npx prettier --write",
+      "npx eslint --fix"
+    ],
+    "**/*.{json,md}": [
+      "npx prettier --write"
+    ]
   }
 }

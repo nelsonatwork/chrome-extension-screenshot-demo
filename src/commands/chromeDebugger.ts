@@ -10,7 +10,7 @@ import Tab = chrome.tabs.Tab;
  * @param changeInfo
  * @param tab
  */
-export const attachToDebugger = async (tabId: number, tab: Tab) => {
+export const attachToDebugger = async (tabId: number) => {
   log.debug(`[attachToDebugger]: ***** triggered tabId=${tabId} *****`);
   await delay();
   try {
@@ -22,7 +22,7 @@ export const attachToDebugger = async (tabId: number, tab: Tab) => {
       }
     });
   } catch (e) {
-    log.error(`[attachToDebuggerNew]: failed to attach debugger`, e);
+    log.error(`[attachToDebugger]: failed to attach debugger`, e);
   }
 };
 
@@ -65,6 +65,7 @@ export const getLayoutMetrics = async (tabId: number): Promise<LayoutMetrics | u
 
   await chrome.debugger
     .sendCommand(target, method, commandParams)
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     .then(async (object: any) => {
       if (chrome.runtime.lastError) {
         log.error(`[getLayoutMetrics {callback}]: status=failed, tabId=${tabId}`, chrome.runtime.lastError);
@@ -105,11 +106,11 @@ export const setDeviceMetricsOverride = async (tabId: number, layoutMetrics: Lay
       if (chrome.runtime.lastError) {
         log.error(`[setDeviceMetricsOverride {callback}]: status=failed, tabId=${tabId}`, chrome.runtime.lastError);
       } else {
-        log.debug(`[setDeviceMetricsOverride {callback}]: completed for tabId=${tabId}\``);
+        log.debug(`[setDeviceMetricsOverride {callback}]: completed for tabId=${tabId}`);
       }
     })
     .catch((e) => {
-      log.error(`[setDeviceMetricsOverride]: something went wrong on tabId=${tabId}\``);
+      log.error(`[setDeviceMetricsOverride]: something went wrong on tabId=${tabId}`, e);
     });
 };
 
@@ -128,6 +129,7 @@ export async function captureScreenshot(tabId: number): Promise<ScreenCaptureRes
 
   await chrome.debugger
     .sendCommand(target, method, commandParams)
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     .then(async (response: any) => {
       if (chrome.runtime.lastError) {
         log.error(`[captureScreenshot {callback}]: status=failed, tabId=${tabId}`, chrome.runtime.lastError);

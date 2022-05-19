@@ -1,4 +1,4 @@
-import { DEFAULT_DELAY, DEFAULT_SCROLL_Y_POS } from './config';
+import { DEFAULT_DELAY } from './config';
 import log from 'loglevel';
 
 /**
