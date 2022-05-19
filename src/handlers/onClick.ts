@@ -2,7 +2,13 @@ import { DEFAULT_DOC_READY_DELAY, ENABLE_AUTO_SCROLL, EXECUTE_ON_NEW_TAB, URL_MA
 import Tab = chrome.tabs.Tab;
 import { ScreenCaptureResponse } from '../types';
 import log from 'loglevel';
-import { executeScrollByScript, downloadScreenCapture, removeTab, createTab } from '../commands/chrome';
+import {
+  executeScrollByScript,
+  downloadScreenCapture,
+  removeTab,
+  createTab,
+  changeWindowWidth
+} from '../commands/chrome';
 import {
   attachToDebugger,
   getLayoutMetrics,
@@ -10,7 +16,7 @@ import {
   captureScreenshot,
   detachDebugger
 } from '../commands/chromeDebugger';
-import { LIST_OF_LOCALES } from '../constatns';
+import { LIST_OF_DEVICE_WIDTHS, LIST_OF_LOCALES } from '../constatns';
 import { delay } from '../utils';
 
 const processTab = async (tab: Tab, locale: string, executeOnNewTab: boolean) => {
@@ -59,9 +65,12 @@ export const onClickHandler = () => {
   return async (activeTab: Tab) => {
     const currentUrl = activeTab.url;
     if (currentUrl && currentUrl.match(URL_MATCH_PATTERN)) {
-      for (const aLocale of LIST_OF_LOCALES) {
-        const url = currentUrl.replace('en', aLocale);
-        await processUrl(url, aLocale, activeTab);
+      for (const aWidth of LIST_OF_DEVICE_WIDTHS) {
+        await changeWindowWidth(aWidth);
+        for (const aLocale of LIST_OF_LOCALES) {
+          const url = currentUrl.replace('en', aLocale);
+          await processUrl(url, aLocale, activeTab);
+        }
       }
     } else {
       log.warn(`[onClickHandler]: abort, url not found or does not match '${URL_MATCH_PATTERN}'`);

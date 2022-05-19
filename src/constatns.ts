@@ -17,6 +17,9 @@ export const LIST_OF_LOCALES = ['en', 'fr-fr', 'ja-jp'];
 //   'zh-tw/'
 // ];
 
+export const LIST_OF_DEVICE_WIDTHS = [1200];
+// export const LIST_OF_DEVICE_WIDTHS = [480, 768, 1200];
+
 /* ENUMS */
 export enum LOG_LEVEL {
   TRACE = 'trace',

@@ -90,7 +90,6 @@ export const executeScrollByScript = async (tabId: number, totalHeight: number) 
   for (let i = 0; i < x; i++) {
     await delay();
     await chrome.scripting
-
       .executeScript({
         target: { tabId: tabId },
         func: scrollBy,
@@ -104,4 +103,23 @@ export const executeScrollByScript = async (tabId: number, totalHeight: number) 
         log.error('[executeScrollByScript {callback}]: something went wrong', e);
       });
   }
+};
+
+/**
+ *
+ * @param width
+ */
+export const changeWindowWidth = async (width: number) => {
+  await chrome.windows
+    .getLastFocused({ populate: false })
+    .then(async (currWindow) => {
+      if (currWindow && currWindow.id) {
+        log.debug(`[changeWidth {callback}]: status=success, resizing window to width=${width}`);
+        await chrome.windows.update(currWindow.id, { width: width });
+      }
+    })
+    .catch((e) => {
+      log.error(`[changeWidth]: something went wrong`, e);
+    });
+  await delay();
 };
