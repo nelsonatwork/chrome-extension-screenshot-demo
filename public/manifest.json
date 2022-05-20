@@ -12,10 +12,8 @@
     "48": "/assets/icon-48.png",
     "128": "/assets/icon-128.png"
   },
-  "permissions": ["activeTab", "scripting", "tabs", "debugger", "downloads", "desktopCapture"],
-  "host_permissions": [
-    "https://*.twitch.tv/*"
-  ],
+  "permissions": ["activeTab", "scripting", "tabs", "debugger", "downloads", "desktopCapture", "notifications"],
+  "host_permissions": ["https://*.twitch.tv/*"],
   "background": {
     "service_worker": "background.js",
     "type": "module"

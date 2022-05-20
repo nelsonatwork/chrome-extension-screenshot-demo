@@ -2,22 +2,18 @@ import { DEFAULT_DOC_READY_DELAY, ENABLE_AUTO_SCROLL, EXECUTE_ON_NEW_TAB, URL_MA
 import Tab = chrome.tabs.Tab;
 import { ScreenCaptureResponse } from '../types';
 import log from 'loglevel';
-import {
-  executeScrollByScript,
-  downloadScreenCapture,
-  removeTab,
-  createTab,
-  changeWindowWidth
-} from '../commands/chrome';
+import { executeScrollByScript, downloadScreenCapture, changeWindowWidth } from '../commands/misc';
 import {
   attachToDebugger,
   getLayoutMetrics,
   setDeviceMetricsOverride,
   captureScreenshot,
   detachDebugger
-} from '../commands/chromeDebugger';
+} from '../commands/debugger';
 import { LIST_OF_DEVICE_WIDTHS, LIST_OF_LOCALES } from '../constatns';
 import { delay } from '../utils';
+import { createNotification, updateNotification } from '../commands/notifications';
+import { createTab, removeTab } from '../commands/tabs';
 
 const processTab = async (tab: Tab, locale: string, executeOnNewTab: boolean) => {
   log.debug(`[processTab]: ***** started tabId=${tab.id}, locale=${locale} *****`);
@@ -62,16 +58,27 @@ const processUrl = async (url: string, locale: string, tab?: Tab) => {
 
 export const onClickHandler = () => {
   log.debug(`[onClickHandler]: ***** started *****`);
+  const notificationId = 'screenCapture';
   return async (activeTab: Tab) => {
     const currentUrl = activeTab.url;
     if (currentUrl && currentUrl.match(URL_MATCH_PATTERN)) {
+      createNotification(notificationId);
+      const total = LIST_OF_DEVICE_WIDTHS.length * LIST_OF_LOCALES.length;
+      let count = 0;
       for (const aWidth of LIST_OF_DEVICE_WIDTHS) {
         await changeWindowWidth(aWidth);
         for (const aLocale of LIST_OF_LOCALES) {
           const url = currentUrl.replace('en', aLocale);
+          updateNotification(
+            notificationId,
+            `Processing...\nurl='${url}'\nwidth='${aWidth}`,
+            Math.round((count / total) * 100)
+          );
           await processUrl(url, aLocale, activeTab);
+          count++;
         }
       }
+      updateNotification(notificationId, 'Completed', 100);
     } else {
       log.warn(`[onClickHandler]: abort, url not found or does not match '${URL_MATCH_PATTERN}'`);
     }
